@@ -1,9 +1,10 @@
 import React from 'react';
-import { Creatable } from 'react-select';
+import Select from 'react-select';
+import Creatable from 'react-select/creatable';
 // @ts-ignore
-import { reactSelectStyles } from 'netlify-cms-ui-default';
+//import { reactSelectStyles } from 'decap-cms-ui-default';
 // @ts-ignore
-import { validations } from 'netlify-cms-lib-widgets';
+//import { validations } from 'decap-cms-lib-widgets';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fromJS, List } from 'immutable';
@@ -231,7 +232,7 @@ export default class Control extends React.Component<Props, State> {
       options: new Map(),
     };
   }
-
+  
   isValid = () => {
     const { field, value, t } = this.props;
     const isMultiple = (field.get('multiple') || false) as boolean;
@@ -243,6 +244,7 @@ export default class Control extends React.Component<Props, State> {
       return { error: false };
     }
 
+    /*
     const error = validations.validateMinMax(
       t,
       field.get('label') || field.get('name'),
@@ -250,11 +252,16 @@ export default class Control extends React.Component<Props, State> {
       min,
       max
     );
+    */
+    const error = false;
 
     return error ? { error } : { error: false };
   };
 
+
   async componentDidMount() {
+    // Manually validate PropTypes - React 19 breaking change
+    PropTypes.checkPropTypes(Control.propTypes, this.props, 'prop', 'Control');
     const { value, field, onChange } = this.props;
     const isMultiple = (field.get('multiple') || false) as boolean;
     const url = field.get('url');
@@ -311,7 +318,7 @@ export default class Control extends React.Component<Props, State> {
         optionsMap.set(e.value, e);
       });
       this.setState({ isLoading: false, hasNoOptionMessage: null, options: optionsMap });
-    } catch(e) {
+    } catch(e: any) {
       if (e.isNoOptionsError) {
         this.setState({ isLoading: false, hasNoOptionMessage: e.message, options: new Map() });
       } else {
@@ -354,12 +361,13 @@ export default class Control extends React.Component<Props, State> {
         }
       });
 
+
     return (
       <Creatable
         isLoading={isLoading}
         value={labeledValues.toArray()}
         inputId={forID}
-        defaultOptions
+        //defaultOptions
         options={[...options.values()]}
         getNewOptionData={e => {
           if (value.includes(e)) {
@@ -368,8 +376,8 @@ export default class Control extends React.Component<Props, State> {
             return { value: e, label: `Create "${e}"` };
           }
         }}
-        getOptionLabel={e => e.label}
-        getOptionValue={e => e.value}
+        getOptionLabel={(e: SelectOption) => e.label}
+        getOptionValue={(e: SelectOption) => e.value}
         onChange={(
           val: readonly SelectOption[] | SelectOption | null | undefined
         ) => {
@@ -385,7 +393,7 @@ export default class Control extends React.Component<Props, State> {
         className={classNameWrapper}
         onFocus={setActiveStyle}
         onBlur={setInactiveStyle}
-        styles={reactSelectStyles}
+        //styles={reactSelectStyles}
         isMulti={isMultiple}
         isClearable={isClearable}
         placeholder={""}
