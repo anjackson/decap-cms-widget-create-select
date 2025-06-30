@@ -1,5 +1,4 @@
 import React from 'react';
-import Select from 'react-select';
 import Creatable from 'react-select/creatable';
 // @ts-ignore
 //import { reactSelectStyles } from 'decap-cms-ui-default';
@@ -367,9 +366,9 @@ export default class Control extends React.Component<Props, State> {
         isLoading={isLoading}
         value={labeledValues.toArray()}
         inputId={forID}
-        //defaultOptions
+        defaultOptions
         options={[...options.values()]}
-        getNewOptionData={e => {
+        getNewOptionData={(e: SelectOption) => {
           if (value.includes(e)) {
             return { value: e, label: e };
           } else {
